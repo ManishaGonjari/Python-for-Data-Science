@@ -2,7 +2,7 @@
 
 # In[3]:
 
-#Program to analyze medicare data
+#Project to analyze medicare data
 #Importing required libraries
 
 import requests, zipfile, os,openpyxl, sqlite3,glob, getpass,csv,pandas as pd, statistics

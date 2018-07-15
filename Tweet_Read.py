@@ -44,7 +44,8 @@ def sendData(c_socket):
   auth.set_access_token(access_token, access_secret)
 
   twitter_stream = Stream(auth, TweetsListener(c_socket))
-  twitter_stream.filter(track=['Enrique'])
+  inp = input('Enter input for analysis')
+  twitter_stream.filter(track= inp)
 
 if __name__ == "__main__":
   s = socket.socket()         # Creating socket object

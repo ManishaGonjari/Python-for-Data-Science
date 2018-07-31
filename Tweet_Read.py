@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Apr 15 16:04:18 2018
-
 @author: Manisha
 """
 

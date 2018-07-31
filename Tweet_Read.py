@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: Manisha
+@author: UTD
 """
 
 import tweepy

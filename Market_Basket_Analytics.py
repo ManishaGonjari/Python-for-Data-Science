@@ -143,4 +143,4 @@ while (i < 100):                                #Looping through test data
 
     i += 1                                                            #Increamenting count
     
-print("Program Done")
+print("Done")

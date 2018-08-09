@@ -1,4 +1,13 @@
 # coding: utf-8
+# Steps:
+#Uncovered associations between items by analyzing dataset with million records using market basket analytics 
+#Based on trend in existing purchase history recommended product for test dataset with 90% accuracy 
+# 1. Create frequency dictionary by traversing through training dataset
+# 2. Traverse through testing dataset and call function check_set()
+# 3. check_set() is used to check if the testing record is part of training record
+# 4. If no match found for given record then split the record using combination package
+# 5. Take the record with max count
+
 
 # In[1]:
 #importing required packages
@@ -21,6 +30,7 @@ training_data.drop('A', axis=1, inplace=True)   #Dropping first index column
 train_len = len(training_data.index)       #Training data length
 frequency_dict = {}                     # This dict will hold key = each list combination in form of tuple and value= count
 
+# Line 25 to 46 creating frequency dictionary and count. And sorting it based on count.
 i = 1
 while (i < train_len):                     #Traversing through each record in training_data
     train_list = []
@@ -68,6 +78,8 @@ print('Done')
 
 # In[19]:
 
+#Function to get matching set from training set. Checking length because needs to give priority to large records.
+
 def check_set(inp,inp_len):                       #Function to fetch the match list
     #x = train_size - 1
     i = train_size - 1            
@@ -96,11 +108,11 @@ while (i < 100):                                #Looping through test data
     print("inp list")                                          #Printing input list
     print(inp_list)
     
-    if 'P04' in inp_list:                                      #Removing P04
-        inp_list.remove('P04')
+    #if 'P04' in inp_list:                                      #Removing P04
+    #    inp_list.remove('P04')
         
-    if 'P08' in inp_list:                                      #Removing P08
-        inp_list.remove('P08')
+    #if 'P08' in inp_list:                                      #Removing P08
+     #   inp_list.remove('P08')
     
     inp_len = len(inp_list)                                    #Taking input length      
     k = 0
@@ -112,7 +124,7 @@ while (i < 100):                                #Looping through test data
         print(finallist)         
     else:                                                
         i_list =[]                                      #If dont find then split
-        split_list = list(it.combinations(inp_list, inp_len-1))   #split list
+        split_list = list(it.combinations(inp_list, inp_len-1))   #split list   This package is giving different combination for given list
         for l in split_list:                               #traverse through each list after splitting
             k = 0
             k  = check_set(l,inp_len)                      #for each list call check set                 
@@ -138,7 +150,6 @@ while (i < 100):                                #Looping through test data
     
     with open('market_basket_recommendations.txt', 'a') as out_file:   #Writing output to file
         print(to_file,file= out_file)
-
 
 
     i += 1                                                            #Increamenting count

@@ -11,7 +11,7 @@ from openpyxl import load_workbook
 
 # In[4]:
 
-# Fetching data from medicare.gov
+# Fetching data from medicare.gov using request package
 
 url="https://data.medicare.gov/views/bg9k-emty/files/0a9879e0-3312-4719-a1db-39fd114890f1?content_type=application%2Fzip%3B%20charset%3Dbinary&filename=Hospital_Revised_Flatfiles.zip"
 r=requests.get(url)                         #Checking different parameters of requests.get()
@@ -23,6 +23,7 @@ print(type(r.content))
 
 # In[6]:
 
+# Creating staging directory so that it will be helpful for debugging purpose
 #Creating staging directory
 staging_dir_name = "staging"
 os.mkdir(staging_dir_name)
@@ -108,19 +109,20 @@ print("Table created and populated with values")
 
 # In[13]:
 
-#Fetching data for hospital ranking
+#First part was downloading data and inserting to tables. Table name was same as CSV file.
+#Fetching data for hospital ranking.  
 k_url = "http://kevincrook.com/utd/hospital_ranking_focus_states.xlsx"   
 r = requests.get(k_url)                                                        
 r.headersxf = open("hospital_ranking_fodcus_states.xlsx","wb")
 xf = open("hospital_ranking_fodcus_states.xlsx","wb")
 xf.write(r.content)                                    #Writing contents to excel file
 xf.close()
-print("Fetching data done")
+print("Fetching data done") 
 
 
 # In[14]:
 
-#Check data from hospital_ranking_fodcus_states
+#Check data from hospital_ranking_fodcus_states 
 
 wb = openpyxl.load_workbook("hospital_ranking_fodcus_states.xlsx")
 for sheet_name in wb.get_sheet_names():                               #Checking sheets
@@ -147,8 +149,10 @@ print("Checking sheets done")
 #Hospital ranking excel file includes data from hospital general information table
 
 #Creating hospital_ranking file and adding columns
+
+
 wb2 = openpyxl.Workbook()                    
-sheet_1 = wb2.create_sheet("Nationwide")                
+sheet_1 = wb2.create_sheet("Nationwide")                 
 sheet_1.cell(row=1,column=1,value="Provider ID")                 #Creating columns in workbook
 sheet_1.cell(row=1,column=2,value="Hospital Name")
 sheet_1.cell(row=1,column=3,value="City")
@@ -159,6 +163,9 @@ wb2.remove_sheet(wb2.get_sheet_by_name('Sheet'))                #Removing extra 
 wb2.save("hospital_ranking.xlsx")
 
 # 'sheet' is from Excel hospital_ranking_focus_states
+
+# Fetching records for top 100 provider id from database and inserting to excel
+#excel will hold general information
 
 i = 2
 while i < 102:
@@ -178,7 +185,7 @@ while i < 102:
     i += 1     #Next provider id
     
     
-#Creating sheet for each state
+#Creating sheet for each state; purpose of this is to insert measures for each state
 wb2 = openpyxl.load_workbook("hospital_ranking.xlsx")    
 wb = openpyxl.load_workbook("hospital_ranking_fodcus_states.xlsx")
 sheet2 = wb.get_sheet_by_name("Focus States")
@@ -210,7 +217,7 @@ while m < 12:                                                  #Looping through 
     #Fetching records based on state
     df = c1.execute("select provider_id,hospital_name,city,state,county_name from hospital_general_information where state = ?",(hospital_abs,))
     
-    for rows in df:
+    for rows in df: 
         con_list = list(rows)           #Converting tuple to rows
         inp_prov = con_list[0]          #provider_id
     
@@ -273,6 +280,7 @@ wb3 = openpyxl.load_workbook("measures_statistics.xlsx")
 wb = openpyxl.load_workbook("hospital_ranking_fodcus_states.xlsx")
 sheet2 = wb.get_sheet_by_name("Focus States")
 
+#For each state calculate statistics in excel tab; name each tab with state name
 i = 2
 while i < 12:                                                      #Traversing through all states
         hospital_state = sheet2.cell(row=i, column=1).value        
